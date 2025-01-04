@@ -1,0 +1,30 @@
+[
+	{
+		"correct_answers":
+		[
+			"2025"
+		],
+		"test": "20 25\n"
+	},
+	{
+		"correct_answers":
+		[
+			"3025"
+		],
+		"test": "30 25\n"
+	},
+	{
+		"correct_answers":
+		[
+			"3136"
+		],
+		"test": "45 11\n"
+	},
+	{
+		"correct_answers":
+		[
+			"9834496"
+		],
+		"test": "2025 1111\n"
+	}
+]
