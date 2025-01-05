@@ -41,7 +41,7 @@ void print(int x) {
 }
 char grid[N][N];
 ll h, w;
-ll dist[N][N];
+ll dist[N][N][3];
 struct tup {
 	ll x, y;
 	ll flag;
@@ -67,7 +67,7 @@ int main() {
 
 	std::queue<tup> q;
 	q.push({sx, sy, -1});
-	dist[sx][sy] = 0;
+	dist[sx][sy][1] = dist[sx][sy][2] = 0;
 	while (q.size()) {
 		auto t = q.front();
 		q.pop();
@@ -77,8 +77,8 @@ int main() {
 				if (tx < 1 || tx > h || ty < 1 || ty > w || grid[tx][ty] == '#') {
 					continue;
 				}
-				if (dist[tx][ty] > dist[t.x][t.y] + 1) {
-					dist[tx][ty] = dist[t.x][t.y] + 1;
+				if (dist[tx][ty][2] > dist[t.x][t.y][1] + 1) {
+					dist[tx][ty][2] = dist[t.x][t.y][1] + 1;
 					q.push({tx, ty, 2});
 				}
 			}
@@ -87,8 +87,8 @@ int main() {
 				if (tx < 1 || tx > h || ty < 1 || ty > w || grid[tx][ty] == '#') {
 					continue;
 				}
-				if (dist[tx][ty] > dist[t.x][t.y] + 1) {
-					dist[tx][ty] = dist[t.x][t.y] + 1;
+				if (dist[tx][ty][1] > dist[t.x][t.y][2] + 1) {
+					dist[tx][ty][1] = dist[t.x][t.y][2] + 1;
 					q.push({tx, ty, 1});
 				}
 
@@ -99,8 +99,8 @@ int main() {
 				if (tx < 1 || tx > h || ty < 1 || ty > w || grid[tx][ty] == '#') {
 					continue;
 				}
-				if (dist[tx][ty] > dist[t.x][t.y] + 1) {
-					dist[tx][ty] = dist[t.x][t.y] + 1;
+				if (dist[tx][ty][2] > dist[t.x][t.y][1] + 1) {
+					dist[tx][ty][2] = dist[t.x][t.y][1] + 1;
 					q.push({tx, ty, 2});
 				}
 			}
@@ -110,8 +110,8 @@ int main() {
 				if (tx < 1 || tx > h || ty < 1 || ty > w || grid[tx][ty] == '#') {
 					continue;
 				}
-				if (dist[tx][ty] > dist[t.x][t.y] + 1) {
-					dist[tx][ty] = dist[t.x][t.y] + 1;
+				if (dist[tx][ty][1] > dist[t.x][t.y][2] + 1) {
+					dist[tx][ty][1] = dist[t.x][t.y][2] + 1;
 					q.push({tx, ty, 1});
 				}
 
@@ -128,7 +128,13 @@ int main() {
 		}
 		if (gx != -1) break;
 	}
-	if (dist[gx][gy] == 0x3f3f3f3f3f3f3f3f) std::cout << -1;
-	else std::cout << dist[gx][gy];
+	// for (int i = 1; i <= h; i ++) {
+	// 	for (int j = 1; j <= w; j ++) {
+	// 		std::cout << dist[i][j] << " ";
+	// 	}
+	// 	std::cout << std::endl;
+	// }
+	if (dist[gx][gy][1] == 0x3f3f3f3f3f3f3f3f && dist[gx][gy][2] == 0x3f3f3f3f3f3f3f3f) std::cout << -1;
+	else std::cout << std::min(dist[gx][gy][1], dist[gx][gy][2]);
 	return 0;
 }
