@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>从字典序到实数：一步一步理解</title>
+<style>
+:root{--ink:#223047;--muted:#607089;--blue:#245bb1;--line:#dce5ef;--bg:#f2f6fa;--orange:#985409}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.9 "Microsoft YaHei","PingFang SC",sans-serif}main{max-width:920px;margin:36px auto;background:white;padding:48px 62px;border-radius:16px}h1{font-size:34px;line-height:1.4;margin:12px 0 20px}h2{font-size:23px;line-height:1.5;margin:0 0 16px}h3{font-size:18px;margin:20px 0 8px}p{margin:12px 0}.intro,.muted{color:var(--muted)}.tag{color:var(--blue);font-size:13px;letter-spacing:2px;font-weight:bold}section{padding:30px 0;border-top:1px solid var(--line)}.step{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#eaf1fc;color:var(--blue);font-size:17px;margin-right:9px}.callout{background:#edf4ff;border-left:4px solid #5483c6;padding:15px 21px;margin:20px 0;border-radius:0 8px 8px 0}.warm{background:#fff6e9;border-color:#d49b49}.math{font-family:Cambria,"Times New Roman",serif;font-size:1.12em}.eq{font:22px/1.8 Cambria,"Times New Roman",serif;text-align:center;padding:14px;background:#f6f8fb;border-radius:8px;margin:18px 0;overflow:auto}.eq small{font:14px/1.6 "Microsoft YaHei",sans-serif;color:var(--muted)}code{font-family:Consolas,monospace;background:#edf1f6;padding:2px 5px;border-radius:4px}.mapping{display:flex;gap:12px;margin:20px 0}.mapping div{flex:1;text-align:center;background:#f1f5fb;border-radius:8px;padding:15px;font-size:22px}.mapping span{color:var(--muted);padding:0 8px}.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.4;margin:0 .15em}.frac>span:first-child{border-bottom:1px solid;padding:0 5px}.frac>span:last-child{padding:0 5px}table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15px}th,td{padding:10px 9px;border-bottom:1px solid var(--line);text-align:left}th{background:#f4f7fb}strong{font-weight:700}.interactive{background:#f7faff;border:1px solid #d2dff0;padding:22px;border-radius:12px}.controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:12px 0}.controls b{width:26px}select{font:20px Consolas,monospace;border:1px solid #bacbe0;border-radius:6px;padding:7px 8px;background:white;color:var(--ink)}select.hit{border:2px solid #c4771a;background:#fff0d9}button{font:14px "Microsoft YaHei",sans-serif;padding:9px 14px;border:1px solid #bfcee0;background:white;color:var(--blue);border-radius:7px;cursor:pointer;margin:4px 5px 8px 0}button:hover{background:#e8f1ff}#result{background:white;padding:16px 18px;border-radius:8px;margin-top:16px}#result p{margin:6px 0}.mono{font-family:Consolas,monospace;overflow-wrap:anywhere}.hittext{background:#ffe3b8;color:#82430a;border-radius:3px;padding:0 3px}.small{font-size:14px;color:var(--muted)}a{color:var(--blue)}footer{font-size:14px;color:var(--muted);padding-top:20px;border-top:1px solid var(--line)}@media(max-width:650px){main{margin:0;padding:28px 21px;border-radius:0}h1{font-size:27px}h2{font-size:21px}.eq{font-size:19px}.interactive{padding:15px}.controls{gap:4px}select{padding:6px}.controls b{width:20px}}@page{size:A4;margin:18mm}@media print{body{background:white;font-size:11pt}main{margin:0;padding:0;max-width:none}h1{font-size:24pt}h2{font-size:16pt;break-after:avoid}section{padding:20px 0}.eq{font-size:15pt}.callout,table,.interactive,.eq{break-inside:avoid}button{display:none}p{orphans:3;widows:3}.small,footer{font-size:10pt}}
+</style>
+</head>
+<body><main>
+<div class="tag">前置知识 · 可交互讲解</div>
+<h1>字符串怎么能拿来比较实数？</h1>
+<p class="intro">先暂时放下 28 进制和拼接公式。我们只用三个字母和熟悉的十进制，弄清楚“把字典序比较转化为实数比较”究竟在做什么。</p>
+<div class="callout"><strong>这句话的意思是：</strong>给每个无限字符串指定一个实数，而且保证字符串谁在字典序中更小，它对应的实数也更小。这样，就可以用数的运算来研究字符串的顺序。</div>
+
+<section><h2><span class="step">1</span>字典序只看第一个不同的位置</h2>
+<p>假设只有 <code>a、b、c</code> 三种字符，顺序是 <code>a &lt; b &lt; c</code>。比较两个字符串时，从左往右看，跳过相同的字符，在第一个不同的位置决定大小。</p>
+<div class="eq"><span class="mono">a b <span class="hittext">b</span> c c …<br>a b <span class="hittext">c</span> a a …</span></div>
+<p>前两位相同，第 3 位是 <code>b &lt; c</code>，所以第一行更小。第 3 位之后出现什么，都不能改变字典序的结果。</p>
+<p>我们要构造的实数也必须具有这个性质：<strong>靠前的第一个差异，足以压过后面的所有差异。</strong></p>
+</section>
+
+<section><h2><span class="step">2</span>回忆：小数是一串“带权重的数字”</h2>
+<p>十进制小数 <span class="math">0.123</span> 的含义是：</p>
+<div class="eq">0.123 = 1 × <span class="frac"><span>1</span><span>10</span></span> + 2 × <span class="frac"><span>1</span><span>100</span></span> + 3 × <span class="frac"><span>1</span><span>1000</span></span></div>
+<table><thead><tr><th>小数点后的位置</th><th>第 1 位</th><th>第 2 位</th><th>第 3 位</th><th>第 k 位</th></tr></thead><tbody><tr><td>这一位的权重</td><td>0.1</td><td>0.01</td><td>0.001</td><td>10<sup>−k</sup></td></tr></tbody></table>
+<p>越靠后，权重越小。无限小数也是同样的意思，只是把这些贡献一直加下去。</p>
+<p>例如，<span class="math">0.121212…</span> 对应的实数，是 <span class="math">0.1、0.12、0.121、0.1212、…</span> 这些有限小数逐渐接近的那个值，数学上叫它们的<strong>极限</strong>。这里的极限存在，因为这些数一直增加，又不会超过 1。</p>
+<div class="callout">所以，无限小数并不是“一个永远写不完、因此没有值的东西”。它是一种表示实数的方式，例如 <span class="math">0.333… = 1/3</span>。</div>
+</section>
+
+<section><h2><span class="step">3</span>给无限字符串指定一个实数</h2>
+<p>我们自己规定下面的编码，并保持字母原来的大小顺序：</p>
+<div class="mapping"><div>a <span>→</span> 1</div><div>b <span>→</span> 2</div><div>c <span>→</span> 3</div></div>
+<p>然后，把无限字符串的每个字母换成对应数字，并在最前面加上 <code>0.</code>：</p>
+<div class="eq"><span class="mono">abccaa…</span> &nbsp; → &nbsp; 0.123311…</div>
+<p>把这条规则记作 <span class="math">F</span>，那么 <span class="math">F(abccaa…) = 0.123311…</span>。这里的 <span class="math">F</span> 就是一台“字符串输入、实数输出”的机器。</p>
+<div class="callout warm"><strong>不是说字符串本来就是一个数。</strong>这是我们人为选择的一种对应规则。要用它证明结论，还必须证明它<strong>保持顺序</strong>：<span class="math">u &lt; v ⇔ F(u) &lt; F(v)</span>。</div>
+</section>
+
+<section><h2><span class="step">4</span>关键：后面的数字为什么不能反超？</h2>
+<p>先看一个具体例子。两个字符串的前两位一样，第 3 位分别是 <code>b</code> 和 <code>c</code>。我们故意把较小一方的后续字符全部设成最大的 <code>c</code>，把较大一方的后续字符全部设成最小的 <code>a</code>：</p>
+<div class="eq"><span class="mono">abbccc… → 0.122333…<br>abcaaa… → 0.123111…</span></div>
+<p>第 3 位从 2 变成 3，给第二个数带来了 <strong>0.001</strong> 的优势。后面的位则一直在帮第一个数追赶，但它们最多追回：</p>
+<div class="eq">0.0002 + 0.00002 + 0.000002 + …<br>= 0.000222… &lt; 0.001</div>
+<p>连这种对第一方最有利的尾部都追不上，其他尾部就更不可能。因此，实数比较也由第一个不同位决定。</p>
+<h3>换成任意位置，道理完全一样</h3>
+<p>假设第一个不同位是第 <span class="math">k</span> 位。该位的数字至少相差 1，产生的优势至少是 <span class="math">10<sup>−k</sup></span>。后续每位最多相差 <span class="math">3 − 1 = 2</span>，全部尾部能追回的量至多为：</p>
+<div class="eq">2 × 10<sup>−(k+1)</sup> + 2 × 10<sup>−(k+2)</sup> + …<br>= <span class="frac"><span>2</span><span>9</span></span> × 10<sup>−k</sup> &lt; 10<sup>−k</sup></div>
+<p class="small">这里用了等比级数：首项为 A、公比为 r，且 0 &lt; r &lt; 1 时，无限和为 A/(1 − r)。本例首项为 2 × 10<sup>−(k+1)</sup>，公比为 1/10。</p>
+<div class="callout"><strong>至此才证明了“可以转化”：</strong>字符串在第一个不同位决定的大小，与它对应的小数的大小一致。不同字符串也不会被映射到同一个实数；相同字符串则显然对应同一个实数。</div>
+</section>
+
+<section><h2><span class="step">5</span>动手改一改，观察顺序如何保持</h2>
+<p>每行前 5 个字母可修改，后面固定为无限个 <code>a</code>。橙色标出第一个不同位。可以试着让较小一方的后续字母全部变大，看它能否反超。</p>
+<div class="interactive">
+<div class="controls" id="u"><b>u</b></div><div class="controls" id="v"><b>v</b></div>
+<button type="button" id="worst">看“尾部拼命追赶”的例子</button><button type="button" id="equal">看两个字符串相同</button>
+<div id="result" aria-live="polite"></div>
+<noscript>启用 JavaScript 后可操作。静态示例：abbcca… &lt; abca aa…（忽略空格），对应 0.12233111… &lt; 0.12311111…，第 3 位决定大小。</noscript>
+</div>
+</section>
+
+<section><h2><span class="step">6</span>现在再看 28 进制，就没有新概念了</h2>
+<p>上面只用了三个字母，所以十进制足够。如果要把 26 个字母编码成 1 到 26，十进制就不够了：<strong>十进制的单个数位只能是 0 到 9，不能把 26 当作一个数位。</strong></p>
+<p><span class="math">B</span> 进制只是把每一位的权重从 <span class="math">10<sup>−k</sup></span> 换成 <span class="math">B<sup>−k</sup></span>。为了避免把一个数位中的 26 误读成两个数位，可以这样写：</p>
+<div class="eq">F(azb…) = 1 × 28<sup>−1</sup> + 26 × 28<sup>−2</sup> + 2 × 28<sup>−3</sup> + …</div>
+<p>原理仍然是“首个不同位的优势，大于全部尾部可能追回的量”。此时每位最多相差 25，于是：</p>
+<div class="eq">尾部最大影响 = <span class="frac"><span>25</span><span>27</span></span> × 28<sup>−k</sup> &lt; 28<sup>−k</sup></div>
+<p><strong>28 没有特殊含义。</strong>用 1 到 26 编码时，27、28、29 等进制都可以；27 进制中对应的比例为 <span class="math">25/26 &lt; 1</span>，同样成立。</p>
+</section>
+
+<section><h2><span class="step">7</span>它怎样帮我们证明原来的结论？</h2>
+<p>对于无限重复 <span class="math">s<sup>∞</sup></span>，上述规则恰好把它变成一个<strong>循环小数</strong>。循环小数可以通过等比级数写成分数，这就让字符串问题变成了可以通分、相减的代数问题。</p>
+<p>例如，在我们的三字母十进制例子中，取 <code>s = ab</code>、<code>t = aba</code>：</p>
+<div class="eq">F(s<sup>∞</sup>) = 0.121212… = <span class="frac"><span>12</span><span>99</span></span><br>F(t<sup>∞</sup>) = 0.121121… = <span class="frac"><span>121</span><span>999</span></span></div>
+<p>比较这两个分数，通分后分子的差为：</p>
+<div class="eq">12 × 999 − 121 × 99 = 9 &gt; 0.</div>
+<p>于是 <span class="math">F(s<sup>∞</sup>) &gt; F(t<sup>∞</sup>)</span>。由于我们已经证明 <span class="math">F</span> 保持顺序，就能得出 <span class="math">s<sup>∞</sup> &gt; t<sup>∞</sup></span>。</p>
+<p>再看拼接：<code>st = ababa</code> 编码为整数 12121，<code>ts = abaab</code> 编码为整数 12112，它们的差也是 <strong>9</strong>。原证明就是把这个例子中的计算推广到任意非空字符串。</p>
+<div class="callout"><strong>整个证明的桥梁：</strong><br>无限字符串 → 按位编码的小数 → 证明保持大小关系 → 用分数运算比较 → 把结果翻译回字典序。</div>
+<p class="small">范围提醒：这里的 F 针对无限字符串。原证明对有限的 st、ts 使用整数编码，是因为它们长度相等。不要直接拿不同长度字符串对应的整数比较字典序，例如 aac &lt; b，但整数 113 &gt; 2。</p>
+<p>理解这座桥梁后，可以继续阅读 <a href="字符串拼接与无限重复的字典序证明.html">完整的代数证明</a>。</p>
+</section>
+<footer>此文档无需联网，可直接在浏览器中阅读。按 Ctrl + P 并选择“另存为 PDF”，可保存当前内容；交互控件在 HTML 中使用。</footer>
+</main>
+<script>
+const letters=['a','b','c'];
+for(const id of ['u','v']){const row=document.getElementById(id);for(let i=0;i<5;i++){const select=document.createElement('select');select.setAttribute('aria-label',id+' 的第 '+(i+1)+' 个字符');for(const c of letters){const option=document.createElement('option');option.value=c;option.textContent=c;select.appendChild(option);}select.addEventListener('change',render);row.appendChild(select);}const tail=document.createElement('span');tail.textContent='a a a …';tail.className='small';row.appendChild(tail);}
+function values(id){return Array.from(document.querySelectorAll('#'+id+' select'),s=>s.value);}
+function setExample(u,v){for(const [id,word] of [['u',u],['v',v]])document.querySelectorAll('#'+id+' select').forEach((s,i)=>s.value=word[i]);render();}
+function render(){const u=values('u'),v=values('v');const first=u.findIndex((c,i)=>c!==v[i]);const sign=first<0?'=':u[first]<v[first]?'&lt;':'&gt;';for(const id of ['u','v'])document.querySelectorAll('#'+id+' select').forEach((s,i)=>s.classList.toggle('hit',i===first));const show=(word,numeric)=>word.map((c,i)=>{const digit=numeric?letters.indexOf(c)+1:c;return i===first?'<span class="hittext">'+digit+'</span>':digit;}).join('');let html='<p class="mono">u = '+show(u,false)+'aaa…<br>v = '+show(v,false)+'aaa…</p><p class="mono">F(u) = 0.'+show(u,true)+'111…<br>F(v) = 0.'+show(v,true)+'111…</p><p><strong>字典序：u '+sign+' v　｜　实数：F(u) '+sign+' F(v)</strong></p>';if(first<0){html+='<p>每个位置都相同，因此字符串和对应实数都相等。</p>';}else{const k=first+1;const gap=Math.abs(letters.indexOf(u[first])-letters.indexOf(v[first]));html+='<p>第一个不同位是第 '+k+' 位：'+u[first]+' 与 '+v[first]+'，即数字 '+(letters.indexOf(u[first])+1)+' 与 '+(letters.indexOf(v[first])+1)+'。</p><p>这一位带来的差是 <span class="math">'+gap+' × 10<sup>−'+k+'</sup></span>；即使允许后面无限多位任意变化，最多也只能反向抵消 <span class="math">(2/9) × 10<sup>−'+k+'</sup></span>，所以无法反超。</p>';}document.getElementById('result').innerHTML=html;}
+document.getElementById('worst').addEventListener('click',()=>setExample('abbcc','abcaa'));document.getElementById('equal').addEventListener('click',()=>setExample('abcab','abcab'));setExample('abbcc','abcaa');
+</script>
+</body>
+</html>
